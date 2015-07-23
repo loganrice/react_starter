@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "93d5d04da2d2f46cbf76"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "06c0e8209a250065c267"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -90,6 +90,7 @@
 /******/ 				} finally {
 /******/ 					finishChunkLoading();
 /******/ 				}
+/******/ 	
 /******/ 				function finishChunkLoading() {
 /******/ 					hotChunksLoading--;
 /******/ 					if(hotStatus === "prepare") {
@@ -123,8 +124,8 @@
 /******/ 				else if(typeof dep === "function")
 /******/ 					hot._selfAccepted = dep;
 /******/ 				else if(typeof dep === "object")
-/******/ 				for(var i = 0; i < dep.length; i++)
-/******/ 					hot._acceptedDependencies[dep[i]] = callback;
+/******/ 					for(var i = 0; i < dep.length; i++)
+/******/ 						hot._acceptedDependencies[dep[i]] = callback;
 /******/ 				else
 /******/ 					hot._acceptedDependencies[dep] = callback;
 /******/ 			},
@@ -133,8 +134,9 @@
 /******/ 					hot._selfDeclined = true;
 /******/ 				else if(typeof dep === "number")
 /******/ 					hot._declinedDependencies[dep] = true;
-/******/ 				else for(var i = 0; i < dep.length; i++)
-/******/ 					hot._declinedDependencies[dep[i]] = true;
+/******/ 				else
+/******/ 					for(var i = 0; i < dep.length; i++)
+/******/ 						hot._declinedDependencies[dep[i]] = true;
 /******/ 			},
 /******/ 			dispose: function(callback) {
 /******/ 				hot._disposeHandlers.push(callback);
@@ -189,7 +191,8 @@
 /******/ 	var hotUpdate, hotUpdateNewHash;
 /******/ 	
 /******/ 	function toModuleId(id) {
-/******/ 		return (+id) + "" === id ? +id : id;
+/******/ 		var isNumber = (+id) + "" === id;
+/******/ 		return isNumber ? +id : id;
 /******/ 	}
 /******/ 	
 /******/ 	function hotCheck(apply, callback) {
@@ -199,7 +202,9 @@
 /******/ 			callback = apply;
 /******/ 		} else {
 /******/ 			hotApplyOnUpdate = apply;
-/******/ 			callback = callback || function(err) { if(err) throw err; };
+/******/ 			callback = callback || function(err) {
+/******/ 				if(err) throw err;
+/******/ 			};
 /******/ 		}
 /******/ 		hotSetStatus("check");
 /******/ 		hotDownloadManifest(function(err, update) {
@@ -220,7 +225,8 @@
 /******/ 			hotSetStatus("prepare");
 /******/ 			hotCallback = callback;
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 0; { // eslint-disable-line no-lone-blocks
+/******/ 			var chunkId = 0;
+/******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
 /******/ 			}
@@ -278,10 +284,14 @@
 /******/ 			callback = options;
 /******/ 			options = {};
 /******/ 		} else if(options && typeof options === "object") {
-/******/ 			callback = callback || function(err) { if(err) throw err; };
+/******/ 			callback = callback || function(err) {
+/******/ 				if(err) throw err;
+/******/ 			};
 /******/ 		} else {
 /******/ 			options = {};
-/******/ 			callback = callback || function(err) { if(err) throw err; };
+/******/ 			callback = callback || function(err) {
+/******/ 				if(err) throw err;
+/******/ 			};
 /******/ 		}
 /******/ 	
 /******/ 		function getAffectedStuff(module) {
@@ -321,6 +331,7 @@
 /******/ 	
 /******/ 			return [outdatedModules, outdatedDependencies];
 /******/ 		}
+/******/ 	
 /******/ 		function addAllToSet(a, b) {
 /******/ 			for(var i = 0; i < b.length; i++) {
 /******/ 				var item = b[i];
@@ -549,7 +560,7 @@
 	/* WEBPACK VAR INJECTION */(function(__resourceQuery) {var io = __webpack_require__(2);
 	var stripAnsi = __webpack_require__(54);
 	var scriptElements = document.getElementsByTagName("script");
-	io = io.connect(true ?
+	io = io.connect( true ?
 		__resourceQuery.substr(1) :
 		scriptElements[scriptElements.length-1].getAttribute("src").replace(/\/[^\/]+$/, "")
 	);
@@ -7871,7 +7882,10 @@
 		var check = function check() {
 			module.hot.check(function(err, updatedModules) {
 				if(err) {
-					if(module.hot.status() in {abort: 1, fail: 1}) {
+					if(module.hot.status() in {
+							abort: 1,
+							fail: 1
+						}) {
 						console.warn("[HMR] Cannot check for update. Need to do a full reload!");
 						console.warn("[HMR] " + err.stack || err.message);
 					} else {
@@ -7890,7 +7904,10 @@
 					ignoreUnaccepted: true
 				}, function(err, renewedModules) {
 					if(err) {
-						if(module.hot.status() in {abort: 1, fail: 1}) {
+						if(module.hot.status() in {
+								abort: 1,
+								fail: 1
+							}) {
 							console.warn("[HMR] Cannot apply update. Need to do a full reload!");
 							console.warn("[HMR] " + err.stack || err.message);
 						} else {
@@ -7913,7 +7930,7 @@
 		};
 		var addEventListener = window.addEventListener ? function(eventName, listener) {
 			window.addEventListener(eventName, listener, false);
-		} : function (eventName, listener) {
+		} : function(eventName, listener) {
 			window.attachEvent("on" + eventName, listener);
 		};
 		addEventListener("message", function(event) {
@@ -7999,33 +8016,33 @@
 	var _stylesheetsApplicationScss2 = _interopRequireDefault(_stylesheetsApplicationScss);
 
 	var App = (function (_React$Component) {
+	  _inherits(App, _React$Component);
+
 	  function App() {
 	    _classCallCheck(this, App);
 
 	    _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, arguments);
 	  }
 
-	  _inherits(App, _React$Component);
-
 	  _createClass(App, [{
 	    key: 'render',
 	    value: function render() {
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'nav' },
+	        { className: "nav" },
 	        _react2['default'].createElement(
 	          _reactRouter.Link,
-	          { to: 'app' },
+	          { to: "app" },
 	          'Home'
 	        ),
 	        _react2['default'].createElement(
 	          _reactRouter.Link,
-	          { to: 'login' },
+	          { to: "login" },
 	          'Login'
 	        ),
 	        _react2['default'].createElement(
 	          _reactRouter.Link,
-	          { to: 'Page1' },
+	          { to: "Page1" },
 	          'PAGE 1'
 	        ),
 	        _react2['default'].createElement(_reactRouter.RouteHandler, null)
@@ -8040,9 +8057,9 @@
 
 	var routes = _react2['default'].createElement(
 	  _reactRouter.Route,
-	  { name: 'app', path: '/', handler: App },
-	  _react2['default'].createElement(_reactRouter.Route, { name: 'login', path: '/login', handler: _componentsLoginJs2['default'] }),
-	  _react2['default'].createElement(_reactRouter.Route, { name: 'Page1', path: '/page1', handler: _componentsPage1Js2['default'] })
+	  { name: "app", path: "/", handler: App },
+	  _react2['default'].createElement(_reactRouter.Route, { name: "login", path: "/login", handler: _componentsLoginJs2['default'] }),
+	  _react2['default'].createElement(_reactRouter.Route, { name: "Page1", path: "/page1", handler: _componentsPage1Js2['default'] })
 	);
 
 	_reactRouter2['default'].run(routes, function (Handler) {
@@ -31561,13 +31578,13 @@
 	var _react2 = _interopRequireDefault(_react);
 
 	var Login = (function (_React$Component) {
+	  _inherits(Login, _React$Component);
+
 	  function Login() {
 	    _classCallCheck(this, Login);
 
 	    _get(Object.getPrototypeOf(Login.prototype), 'constructor', this).apply(this, arguments);
 	  }
-
-	  _inherits(Login, _React$Component);
 
 	  _createClass(Login, [{
 	    key: 'render',
@@ -31617,23 +31634,23 @@
 	var _axios2 = _interopRequireDefault(_axios);
 
 	var Page1 = (function (_React$Component) {
+	  _inherits(Page1, _React$Component);
+
 	  function Page1() {
 	    _classCallCheck(this, Page1);
 
 	    _get(Object.getPrototypeOf(Page1.prototype), 'constructor', this).apply(this, arguments);
 	  }
 
-	  _inherits(Page1, _React$Component);
-
 	  _createClass(Page1, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 
 	      _axios2['default'].get('http://api.notetaker.rails/').then(function (response) {
-	        console.log('about to make a successufl request');
-	        console.log(response.data);
+	        console.log("about to make a successufl request");
+	        console.log(response);
 	      })['catch'](function (response) {
-	        console.log('about to make a failed request');
+	        console.log("about to make a failed request");
 	        console.log(response);
 	      });
 	    }
